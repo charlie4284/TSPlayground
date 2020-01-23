@@ -30,3 +30,9 @@ jobs:
                 node-version: ${{ matrix.node }}
             - run: npm install
             - run: npm test
+            - if: success()
+              name: Test Pass
+              run: echo "All tests passed! good to go!"
+            - if: failure()
+              name: Test fail
+              run: echo "Not all tests passed. Please check."
