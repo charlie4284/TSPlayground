@@ -1,0 +1,32 @@
+name: Typescript-Template
+
+on:
+    pull_request:
+    push:
+        branches:
+            - master
+
+jobs:
+    commit_greetings:
+        name: Greet commits
+        runs-on: ubuntu-latest
+        if: "!contains(github.event.head_commit.message, 'skip ci')"
+        steps: 
+            - name: Echo the commit_greetings
+            run: echo 'Greetings committer!'
+    check_code:
+        name: Check code
+        runs-on: ubuntu-latest
+        needs: [commit_greetings]
+        strategy:
+            matrix:
+                node: ['12']
+        steps:
+            - name: Checkout current commit
+              uses: actions/checkout@v1
+            - name: Setup node
+              uses: actions/setup-node@v1
+              with:
+                node-version: ${{ matrix.node }}
+            - run: npm install
+            - run: npm test
